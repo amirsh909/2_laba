@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status
 from typing import List
-from models.users import UserRegister, UserLogin, UserInDB, UserOut
+from models.users import UserRegister, UserLogin, UserInDB, UserOut, UserChangePassword
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -67,3 +67,23 @@ def get_user_by_email(email: str):
         detail="User not found"
     )
 
+
+@router.put("/{email}/password")
+def change_user_password(email: str, data: UserChangePassword):
+    for user in users_db:
+        if user.email == email:
+            if user.password != data.old_password:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Old password is incorrect"
+                )
+
+            user.password = data.new_password
+            return {
+                "message": "Password updated successfully"
+            }
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="User not found"
+    )
