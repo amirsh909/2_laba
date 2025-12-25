@@ -70,3 +70,15 @@ class UserOut(BaseModel):
                 "role": "guest"
             }
         }
+
+class UserChangePassword(BaseModel):
+    old_password: str = Field(..., example="old_password")
+    new_password: str = Field(..., example="new_password")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "old_password": "old_password",
+                "new_password": "new_password"
+            }
+        }
