@@ -87,3 +87,18 @@ def change_user_password(email: str, data: UserChangePassword):
         status_code=status.HTTP_404_NOT_FOUND,
         detail="User not found"
     )
+
+
+@router.delete("/{email}")
+def delete_user(email: str):
+    for index, user in enumerate(users_db):
+        if user.email == email:
+            users_db.pop(index)
+            return {
+                "message": "User deleted successfully"
+            }
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="User not found"
+    )
